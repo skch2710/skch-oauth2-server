@@ -1,0 +1,17 @@
+server:
+  port: 8060
+
+app:
+  client-id: sathish_ch
+  client-cred: $2a$10$OeZfp.6TtOhTQgO8DaUw8OJV4cqxQ3fZdLjUDUb46ZD/S6Z3aW1zq
+spring:
+  datasource:
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USERNAME}
+    url: ${JDBC_CONNECTION_STRING}
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
