@@ -12,26 +12,51 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 
-import com.skch.skchouth2server.dao.EmployeeDAO;
-import com.skch.skchouth2server.model.Employee;
+import com.skch.skchouth2server.dao.UsersDAO;
+import com.skch.skchouth2server.model.UserPrivilege;
+import com.skch.skchouth2server.model.Users;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class JpaUserDetailsManager implements UserDetailsManager {
 
 	@Autowired
-	private EmployeeDAO userRepository;
+	private UsersDAO userRepository;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Employee user = userRepository.findByEmailIdIgnoreCase(username);
-		if (!user.getEmailId().equals(username)) {
-			throw new UsernameNotFoundException("Access Denied");
+		Users user = userRepository.findByEmailIdIgnoreCase(username);
+		User ur = null;
+		try {
+			if (!user.getEmailId().equalsIgnoreCase(username)) {
+				throw new UsernameNotFoundException("Access Denied");
+			}
+			Collection<GrantedAuthority> authoriies = new HashSet<>();
+			authoriies.add(new SimpleGrantedAuthority(user.getUserRole().getRoles().getRoleName()));
+			
+			authoriies.add(new SimpleGrantedAuthority("USER UUID : "+user.getUserUuid()));
+
+			for (UserPrivilege privileges : user.getUserPrivilege()) {
+				String resourceName = privileges.getResource().getResourceName();
+				if (privileges.getReadOnlyFlag()) {
+					String readOnly = resourceName + "-R";
+					authoriies.add(new SimpleGrantedAuthority(readOnly));
+				}
+				if (privileges.getReadWriteFlag()) {
+					String readWriteOnly = resourceName + "-W";
+					authoriies.add(new SimpleGrantedAuthority(readWriteOnly));
+				}
+				if (privileges.getTerminateFlag()) {
+					String terminate = resourceName + "-X";
+					authoriies.add(new SimpleGrantedAuthority(terminate));
+				}
+			}
+			ur = new User(user.getEmailId(), user.getPasswordSalt(), authoriies);
+		} catch (Exception e) {
+			log.error("Error in loadUserByUsername :: ", e);
 		}
-		Collection<GrantedAuthority> authoriies = new HashSet<>();
-		authoriies.add(new SimpleGrantedAuthority(user.getEmployeeRole().getRole().getRoleName()));
-		
-		User ur = new User(user.getEmailId(), user.getPasswordSalt(), authoriies);
-		
 		return ur;
 	}
 
@@ -53,8 +78,8 @@ public class JpaUserDetailsManager implements UserDetailsManager {
 
 	@Override
 	public boolean userExists(String username) {
-		Employee user = userRepository.findByEmailIdIgnoreCase(username);
-		if (user.getEmailId().equals(username)) {
+		Users user = userRepository.findByEmailIdIgnoreCase(username);
+		if (user.getEmailId().equalsIgnoreCase(username)) {
 			return true;
 		}
 		return false;
