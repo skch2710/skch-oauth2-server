@@ -33,9 +33,6 @@ public class Resource {
     @Column(name = "parent_name")
     private String parentName;
     
-    @Column(name = "parent_path")
-    private String parentPath;
-    
     @Column(name = "parent_icon")
     private String parentIcon;
 
