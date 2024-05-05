@@ -4,6 +4,7 @@ server:
 app:
   client-id: sathish_ch
   client-cred: $2a$10$OeZfp.6TtOhTQgO8DaUw8OJV4cqxQ3fZdLjUDUb46ZD/S6Z3aW1zq
+  aes-key: U2F0aGlzaEt1bWFyQ2gyNw==
   #S@th!$h
 spring:
   datasource:

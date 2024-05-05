@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.skch.skchouth2server.dao.UsersDAO;
 import com.skch.skchouth2server.model.UserPrivilege;
 import com.skch.skchouth2server.model.Users;
+import com.skch.skchouth2server.util.AESUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,6 +38,8 @@ public class JpaUserDetailsManager implements UserDetailsManager {
 			authoriies.add(new SimpleGrantedAuthority(user.getUserRole().getRoles().getRoleName()));
 			
 			authoriies.add(new SimpleGrantedAuthority("USER UUID : "+user.getUserUuid()));
+			
+			authoriies.add(new SimpleGrantedAuthority("USER_ID : "+ AESUtils.encrypt(user.getUserId().toString())));
 
 			for (UserPrivilege privileges : user.getUserPrivilege()) {
 				String resourceName = privileges.getResource().getResourceName();
