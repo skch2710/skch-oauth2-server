@@ -46,12 +46,10 @@ public class JpaUserDetailsManager implements UserDetailsManager {
 				if (privileges.getReadOnlyFlag()) {
 					String readOnly = resourceName + "-R";
 					authoriies.add(new SimpleGrantedAuthority(readOnly));
-				}
-				if (privileges.getReadWriteFlag()) {
+				}else if (privileges.getReadWriteFlag()) {
 					String readWriteOnly = resourceName + "-W";
 					authoriies.add(new SimpleGrantedAuthority(readWriteOnly));
-				}
-				if (privileges.getTerminateFlag()) {
+				}else if (privileges.getTerminateFlag()) {
 					String terminate = resourceName + "-X";
 					authoriies.add(new SimpleGrantedAuthority(terminate));
 				}
