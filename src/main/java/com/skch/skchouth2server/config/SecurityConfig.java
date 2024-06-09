@@ -66,6 +66,9 @@ public class SecurityConfig {
 	@Value("${app.client-cred}")
 	private String clientCred;
 	
+	@Value("${app.expire-time}")
+	private Long expireTime;
+	
 	@Autowired
 	private JpaUserDetailsManager jpaUserDetailsManager;
 
@@ -133,7 +136,8 @@ public class SecurityConfig {
 				.scope(OidcScopes.OPENID).scope(OidcScopes.PROFILE)
 				.scope("read").scope("write")
 				.clientSettings(ClientSettings.builder().requireProofKey(true).requireAuthorizationConsent(false).build())
-				.tokenSettings(TokenSettings.builder().accessTokenTimeToLive(Duration.ofHours(24)).build())
+//				.tokenSettings(TokenSettings.builder().accessTokenTimeToLive(Duration.ofHours(24)).build())
+				.tokenSettings(TokenSettings.builder().accessTokenTimeToLive(Duration.ofMinutes(expireTime)).build())
 				.build();
 		return new InMemoryRegisteredClientRepository(oidcClient);
 	}

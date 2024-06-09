@@ -34,7 +34,7 @@ public class AESUtils {
 				result = Base64.getEncoder().encodeToString(encryptedBytes);
 			}
 		} catch (Exception e) {
-			log.error("Encryption error: " + e.getMessage());
+			log.error("Encryption error: " + e);
 		}
 		return result;
 	}
@@ -49,7 +49,7 @@ public class AESUtils {
 				result = new String(decryptedBytes);
 			}
 		} catch (Exception e) {
-			log.error("Decryption error: " + e.getMessage());
+			log.error("Decryption error: " + e);
 		}
 		return result;
 	}
@@ -60,7 +60,7 @@ public class AESUtils {
 			byte[] key = Base64.getDecoder().decode(aesKey);
 			secretKey = new SecretKeySpec(key, AES);
 		} catch (Exception e) {
-			log.error("SecretKeySpec error: " + e.getMessage());
+			log.error("SecretKeySpec error: " + e);
 		}
 		return secretKey;
 	}
