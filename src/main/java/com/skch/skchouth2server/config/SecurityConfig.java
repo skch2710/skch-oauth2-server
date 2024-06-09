@@ -25,9 +25,11 @@ import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.OAuth2Token;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
+import org.springframework.security.oauth2.core.oidc.endpoint.OidcParameterNames;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.authorization.InMemoryOAuth2AuthorizationService;
+import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
@@ -83,7 +85,7 @@ public class SecurityConfig {
 			.tokenEndpoint(tokenEndpoint -> tokenEndpoint
 					.accessTokenRequestConverter(new CustomGrantAuthenticationConverter())
 					.authenticationProvider(new CustomGrantAuthenticationProvider(
-							new InMemoryOAuth2AuthorizationService(), 
+							oAuth2AuthorizationService(), 
 							tokenGenerator(),
 							userDetailsService(),
 							passwordEncoder())));
@@ -96,6 +98,7 @@ public class SecurityConfig {
 			)
 			.oauth2ResourceServer((resourceServer) -> resourceServer
 				.jwt(Customizer.withDefaults()));
+
 		return http.build();
 	}
 
@@ -108,6 +111,7 @@ public class SecurityConfig {
 				.anyRequest().authenticated()
 			)
 			.formLogin(Customizer.withDefaults());
+
 		return http.build();
 	}
 
@@ -179,6 +183,11 @@ public class SecurityConfig {
 	}
 
 	@Bean
+	OAuth2AuthorizationService oAuth2AuthorizationService() {
+		return new InMemoryOAuth2AuthorizationService();
+	}
+	
+	@Bean
 	OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator() {
 		NimbusJwtEncoder jwtEncoder = new NimbusJwtEncoder(jwkSource());
 		JwtGenerator jwtGenerator = new JwtGenerator(jwtEncoder);
@@ -197,6 +206,12 @@ public class SecurityConfig {
 				Set<String> authorities = principal.getAuthorities().stream().map(GrantedAuthority::getAuthority)
 						.collect(Collectors.toSet());
 				context.getClaims().claim("authorities", authorities).claim("user_name", principal.getName());
+			}
+			
+			if (OidcParameterNames.ID_TOKEN.equals(context.getTokenType().getValue())) {
+				Set<String> authorities = principal.getAuthorities().stream().map(GrantedAuthority::getAuthority)
+						.collect(Collectors.toSet());
+				context.getClaims().claim("authorities", authorities);
 			}
 		};
 	}
