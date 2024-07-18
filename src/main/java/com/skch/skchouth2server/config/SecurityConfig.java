@@ -142,6 +142,7 @@ public class SecurityConfig {
 				.clientSettings(ClientSettings.builder().requireProofKey(true).requireAuthorizationConsent(false).build())
 //				.tokenSettings(TokenSettings.builder().accessTokenTimeToLive(Duration.ofHours(24)).build())
 				.tokenSettings(TokenSettings.builder().accessTokenTimeToLive(Duration.ofMinutes(expireTime)).build())
+				.tokenSettings(TokenSettings.builder().refreshTokenTimeToLive(Duration.ofHours(expireTime)).build())
 				.build();
 		return new InMemoryRegisteredClientRepository(oidcClient);
 	}
