@@ -74,31 +74,24 @@ public class SecurityConfig {
 	@Autowired
 	private JpaUserDetailsManager jpaUserDetailsManager;
 
-	@Bean 
+	@Bean
 	@Order(1)
-	SecurityFilterChain authorizationServerSecurityFilterChain(
-			HttpSecurity http)
-			throws Exception {
-		OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
-		http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
-			.oidc(Customizer.withDefaults())
-			.tokenEndpoint(tokenEndpoint -> tokenEndpoint
-					.accessTokenRequestConverter(new CustomGrantAuthenticationConverter())
-					.authenticationProvider(new CustomGrantAuthenticationProvider(
-							oAuth2AuthorizationService(), 
-							tokenGenerator(),
-							userDetailsService(),
-							passwordEncoder())));
-		http
-			.exceptionHandling((exceptions) -> exceptions
-				.defaultAuthenticationEntryPointFor(
-					new LoginUrlAuthenticationEntryPoint("/login"),
-					new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
-				)
-			)
-			.oauth2ResourceServer((resourceServer) -> resourceServer
-				.jwt(Customizer.withDefaults()));
-
+	SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
+		OAuth2AuthorizationServerConfigurer authorizationServerConfigurer = 
+				OAuth2AuthorizationServerConfigurer.authorizationServer();
+		http.securityMatcher(
+			authorizationServerConfigurer.getEndpointsMatcher()).with(
+				authorizationServerConfigurer, (
+					authorizationServer) -> authorizationServer.oidc(Customizer.withDefaults())
+						.tokenEndpoint(tokenEndpoint -> tokenEndpoint
+						.accessTokenRequestConverter(new CustomGrantAuthenticationConverter())
+						.authenticationProvider(new CustomGrantAuthenticationProvider(
+							oAuth2AuthorizationService(), tokenGenerator(),
+							userDetailsService(), passwordEncoder()))));
+		http.exceptionHandling((exceptions) -> exceptions.defaultAuthenticationEntryPointFor(
+				new LoginUrlAuthenticationEntryPoint("/login"), 
+				new MediaTypeRequestMatcher(MediaType.TEXT_HTML)))
+				.oauth2ResourceServer((resourceServer) -> resourceServer.jwt(Customizer.withDefaults()));
 		return http.build();
 	}
 
@@ -111,7 +104,6 @@ public class SecurityConfig {
 				.anyRequest().authenticated()
 			)
 			.formLogin(Customizer.withDefaults());
-
 		return http.build();
 	}
 

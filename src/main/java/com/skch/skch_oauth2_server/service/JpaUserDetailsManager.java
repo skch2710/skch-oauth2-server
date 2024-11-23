@@ -80,7 +80,7 @@ public class JpaUserDetailsManager implements UserDetailsManager {
 	@Override
 	public boolean userExists(String username) {
 		Users user = userRepository.findByEmailIdIgnoreCase(username);
-		if (user.getEmailId().equalsIgnoreCase(username)) {
+		if(user.getEmailId().equalsIgnoreCase(username)) {
 			return true;
 		}
 		return false;

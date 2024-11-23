@@ -1,5 +1,10 @@
 server:
   port: 8060
+  forward-headers-strategy: framework
+  max-http-request-header-size: 200000000
+  tomcat:
+    max-http-form-post-size: 200000000
+    max-swallow-size: 200000000
 
 app:
   client-id: sathish_ch
