@@ -1,4 +1,4 @@
-package com.skch.skchouth2server.config;
+package com.skch.skch_oauth2_server.config;
 
 import java.util.Collections;
 import java.util.HashSet;

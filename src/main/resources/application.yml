@@ -8,6 +8,8 @@ app:
   aes-key: U2F0aGlzaEt1bWFyQ2gyNw==
   #S@th!$h
 spring:
+  application:
+    name: skch-oauth2-server
   datasource:
     url: ${JDBC_CONNECTION_STRING}
     username: ${DB_USERNAME}

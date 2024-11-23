@@ -1,10 +1,10 @@
-package com.skch.skchouth2server;
+package com.skch.skch_oauth2_server;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class SkchOuth2ServerApplicationTests {
+class SkchOauth2ServerApplicationTests {
 
 	@Test
 	void contextLoads() {

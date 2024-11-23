@@ -1,4 +1,4 @@
-package com.skch.skchouth2server.model;
+package com.skch.skch_oauth2_server.model;
 
 import java.util.Date;
 
@@ -6,35 +6,46 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "user_roles", schema = "hostel")
+@Table(name = "user_privileges", schema = "hostel")
 @JsonIgnoreProperties(ignoreUnknown = true, value = { "users" })
-public class UserRole {
+public class UserPrivilege {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_role_id")
-    private Long userRoleId;
+    @Column(name = "user_privileges_id")
+    private Long userPrivilegesId;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_id", nullable = true)
 	private Users users;
 
     @OneToOne
-	@JoinColumn(name = "role_id", nullable = true)
-	private Roles roles;
+	@JoinColumn(name = "resource_id", nullable = true)
+	private Resource resource;
+
+    @Column(name = "read_only_flag")
+    private Boolean readOnlyFlag;
+
+    @Column(name = "read_write_flag")
+    private Boolean readWriteFlag;
+
+    @Column(name = "terminate_flag")
+    private Boolean terminateFlag;
 
     @Column(name = "is_active")
-    private boolean isActive;
+    private Boolean isActive;
 
     @Column(name = "created_by_id")
     private Long createdById;

@@ -1,4 +1,4 @@
-package com.skch.skchouth2server.model;
+package com.skch.skch_oauth2_server.model;
 
 import java.util.Date;
 

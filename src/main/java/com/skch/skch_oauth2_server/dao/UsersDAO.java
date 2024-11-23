@@ -1,8 +1,8 @@
-package com.skch.skchouth2server.dao;
+package com.skch.skch_oauth2_server.dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.skch.skchouth2server.model.Users;
+import com.skch.skch_oauth2_server.model.Users;
 
 public interface UsersDAO extends JpaRepository<Users, Long> {
 

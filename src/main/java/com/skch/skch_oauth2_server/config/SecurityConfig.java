@@ -1,4 +1,4 @@
-package com.skch.skchouth2server.config;
+package com.skch.skch_oauth2_server.config;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -56,7 +56,7 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import com.skch.skchouth2server.service.JpaUserDetailsManager;
+import com.skch.skch_oauth2_server.service.JpaUserDetailsManager;
 
 @Configuration
 @EnableWebSecurity

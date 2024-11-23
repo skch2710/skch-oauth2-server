@@ -1,4 +1,4 @@
-package com.skch.skchouth2server.service;
+package com.skch.skch_oauth2_server.service;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -12,10 +12,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 
-import com.skch.skchouth2server.dao.UsersDAO;
-import com.skch.skchouth2server.model.UserPrivilege;
-import com.skch.skchouth2server.model.Users;
-import com.skch.skchouth2server.util.AESUtils;
+import com.skch.skch_oauth2_server.dao.UsersDAO;
+import com.skch.skch_oauth2_server.model.UserPrivilege;
+import com.skch.skch_oauth2_server.model.Users;
+import com.skch.skch_oauth2_server.util.AESUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
