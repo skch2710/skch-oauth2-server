@@ -198,7 +198,9 @@ public class SecurityConfig {
 			if (OAuth2TokenType.ACCESS_TOKEN.equals(context.getTokenType())) {
 				Set<String> authorities = principal.getAuthorities().stream().map(GrantedAuthority::getAuthority)
 						.collect(Collectors.toSet());
-				context.getClaims().claim("authorities", authorities).claim("user_name", principal.getName());
+				context.getClaims().claim("authorities", authorities)
+				.claim("user_name", principal.getName())
+				.claim("client_id", context.getRegisteredClient().getClientId());
 			}
 			
 			if (OidcParameterNames.ID_TOKEN.equals(context.getTokenType().getValue())) {
