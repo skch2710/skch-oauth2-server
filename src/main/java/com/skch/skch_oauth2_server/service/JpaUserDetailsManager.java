@@ -36,20 +36,22 @@ public class JpaUserDetailsManager implements UserDetailsManager {
 			}
 			Collection<GrantedAuthority> authoriies = new HashSet<>();
 			authoriies.add(new SimpleGrantedAuthority(user.getUserRole().getRoles().getRoleName()));
-			
-			authoriies.add(new SimpleGrantedAuthority("USER UUID : "+user.getUserUuid()));
-			
-			authoriies.add(new SimpleGrantedAuthority("USER_ID : "+ AESUtils.encrypt(user.getUserId().toString())));
+
+			authoriies.add(new SimpleGrantedAuthority("USER UUID : " + user.getUserUuid()));
+
+			authoriies.add(new SimpleGrantedAuthority("USER_ID : " + AESUtils.encrypt(user.getUserId().toString())));
 
 			for (UserPrivilege privileges : user.getUserPrivilege()) {
 				String resourceName = privileges.getResource().getResourceName();
 				if (privileges.getReadOnlyFlag()) {
 					String readOnly = resourceName + "-R";
 					authoriies.add(new SimpleGrantedAuthority(readOnly));
-				}else if (privileges.getReadWriteFlag()) {
+				}
+				if (privileges.getReadWriteFlag()) {
 					String readWriteOnly = resourceName + "-W";
 					authoriies.add(new SimpleGrantedAuthority(readWriteOnly));
-				}else if (privileges.getTerminateFlag()) {
+				}
+				if (privileges.getTerminateFlag()) {
 					String terminate = resourceName + "-X";
 					authoriies.add(new SimpleGrantedAuthority(terminate));
 				}
@@ -80,7 +82,7 @@ public class JpaUserDetailsManager implements UserDetailsManager {
 	@Override
 	public boolean userExists(String username) {
 		Users user = userRepository.findByEmailIdIgnoreCase(username);
-		if(user.getEmailId().equalsIgnoreCase(username)) {
+		if (user.getEmailId().equalsIgnoreCase(username)) {
 			return true;
 		}
 		return false;
