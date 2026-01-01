@@ -26,6 +26,15 @@ API Call OAuth :
    password : client_secret
    >> In Body select -- x-www-form-urlencoded
 	grant_type : client_credentials
+
+4. Revoke the Refresh Token
+    URL : http://localhost:8061/oauth2/revoke
+   >> In Authorization type -- Basic Auth
+   username : client_id
+   password : client_secret
+   >> In Body select -- x-www-form-urlencoded
+	token_type_hint : refresh_token
+	token : your_refresh_token
 	
 
 Spring Boot 3.x and Java 21 :
@@ -33,3 +42,6 @@ Spring Boot 3.x and Java 21 :
 
 1. Spring Boot 3.x, it uses Spring Security 6 under the hood, fully aligned with Jakarta EE (no javax.*).
 2. OAuth2 / OIDC support is built-in for login with providers like Google, GitHub, or custom IdPs.
+
+
+

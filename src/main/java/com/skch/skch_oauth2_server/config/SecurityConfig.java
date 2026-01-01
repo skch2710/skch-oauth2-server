@@ -132,9 +132,11 @@ public class SecurityConfig {
 				.scope(OidcScopes.OPENID).scope(OidcScopes.PROFILE)
 				.scope("read").scope("write")
 				.clientSettings(ClientSettings.builder().requireProofKey(true).requireAuthorizationConsent(false).build())
-//				.tokenSettings(TokenSettings.builder().accessTokenTimeToLive(Duration.ofHours(24)).build())
-				.tokenSettings(TokenSettings.builder().refreshTokenTimeToLive(Duration.ofHours(expireTime)).build())
-				.tokenSettings(TokenSettings.builder().accessTokenTimeToLive(Duration.ofMinutes(expireTime)).build())
+				.tokenSettings(TokenSettings.builder()
+						.accessTokenTimeToLive(Duration.ofMinutes(expireTime))
+						.refreshTokenTimeToLive(Duration.ofHours(expireTime))
+						.reuseRefreshTokens(false) // set to false to issue a new refresh token upon use
+						.build())
 				.build();
 		return new InMemoryRegisteredClientRepository(oidcClient);
 	}
