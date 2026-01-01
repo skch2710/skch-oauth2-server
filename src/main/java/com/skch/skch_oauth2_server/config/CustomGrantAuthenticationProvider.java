@@ -31,8 +31,6 @@ import org.springframework.security.oauth2.server.authorization.context.Authoriz
 import org.springframework.security.oauth2.server.authorization.token.DefaultOAuth2TokenContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenGenerator;
-import org.springframework.security.provisioning.UserDetailsManager;
-import org.springframework.util.Assert;
 
 public class CustomGrantAuthenticationProvider implements AuthenticationProvider {
 
@@ -46,10 +44,8 @@ public class CustomGrantAuthenticationProvider implements AuthenticationProvider
 	private Set<String> authorizedScopes = new HashSet<>();
 
 	public CustomGrantAuthenticationProvider(OAuth2AuthorizationService authorizationService,
-			OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator, UserDetailsManager userDetailsService,
+			OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator, UserDetailsService userDetailsService,
 			PasswordEncoder passwordEncoder) {
-		Assert.notNull(authorizationService, "authorizationService cannot be null");
-		Assert.notNull(tokenGenerator, "tokenGenerator cannot be null");
 		this.authorizationService = authorizationService;
 		this.tokenGenerator = tokenGenerator;
 		this.userDetailsService = userDetailsService;
@@ -87,11 +83,9 @@ public class CustomGrantAuthenticationProvider implements AuthenticationProvider
 				user.getAuthorities());
 
 		DefaultOAuth2TokenContext.Builder tokenContextBuilder = DefaultOAuth2TokenContext.builder()
-				.registeredClient(registeredClient)
-				.principal(usernamePasswordAuthenticationToken)
+				.registeredClient(registeredClient).principal(usernamePasswordAuthenticationToken)
 				.authorizationServerContext(AuthorizationServerContextHolder.getContext())
-				.authorizedScopes(authorizedScopes)
-				.authorizationGrantType(customCodeGrantAuthentication.getGrantType())
+				.authorizedScopes(authorizedScopes).authorizationGrantType(customCodeGrantAuthentication.getGrantType())
 				.authorizationGrant(customCodeGrantAuthentication);
 
 		// ----- Access Token -----
@@ -132,15 +126,12 @@ public class CustomGrantAuthenticationProvider implements AuthenticationProvider
 			authorizationBuilder.refreshToken(refreshToken);
 		}
 
-
-		OAuth2Authorization authorization = authorizationBuilder
-				.accessToken(accessToken)
-				.refreshToken(refreshToken)
+		OAuth2Authorization authorization = authorizationBuilder.accessToken(accessToken).refreshToken(refreshToken)
 				.authorizedScopes(authorizedScopes)
-				.attribute(Principal.class.getName(), usernamePasswordAuthenticationToken)
-				.build();
+				.attribute(Principal.class.getName(), usernamePasswordAuthenticationToken).build();
 		this.authorizationService.save(authorization);
-		return new OAuth2AccessTokenAuthenticationToken(registeredClient, usernamePasswordAuthenticationToken, accessToken, refreshToken);
+		return new OAuth2AccessTokenAuthenticationToken(registeredClient, usernamePasswordAuthenticationToken,
+				accessToken, refreshToken);
 	}
 
 	@Override
@@ -159,5 +150,5 @@ public class CustomGrantAuthenticationProvider implements AuthenticationProvider
 		}
 		throw new OAuth2AuthenticationException(OAuth2ErrorCodes.INVALID_CLIENT);
 	}
-	
+
 }

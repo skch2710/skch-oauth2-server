@@ -9,27 +9,49 @@ import java.util.Set;
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
+import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.web.authentication.AuthenticationConverter;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
+@AllArgsConstructor
 public class CustomGrantAuthenticationConverter implements AuthenticationConverter {
+	
+	private CachedClientService cachedClientService;
 
 	@Nullable
 	@Override
 	public Authentication convert(HttpServletRequest request) {
 
 		String grantType = request.getParameter(OAuth2ParameterNames.GRANT_TYPE);
-		if (!"custom_pwd".equals(grantType)) {
-			return null;
-		}
 		Authentication clientPrincipal = SecurityContextHolder.getContext().getAuthentication();
+
+		RegisteredClient registeredClient = cachedClientService.getClient(clientPrincipal.getName());
+		
+		Set<String> standardGrants = Set.of(
+		        AuthorizationGrantType.AUTHORIZATION_CODE.getValue(),
+		        AuthorizationGrantType.REFRESH_TOKEN.getValue(),
+		        AuthorizationGrantType.CLIENT_CREDENTIALS.getValue()
+		);
+
+		boolean customGrantAllowed = registeredClient.getAuthorizationGrantTypes().stream()
+		        .map(AuthorizationGrantType::getValue)
+		        .filter(grant -> !standardGrants.contains(grant))
+		        .anyMatch(grant -> grant.equals(grantType));
+
+		if (!customGrantAllowed) {
+		    return null;
+		}
 
 		MultiValueMap<String, String> parameters = getParameters(request);
 
