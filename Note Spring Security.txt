@@ -1,0 +1,35 @@
+API Call OAuth :
+-----------------
+1. Request Type -- Grant Type 
+   URL : http://localhost:8061/oauth2/token
+   >> In Authorization type -- Basic Auth
+   username : client_id
+   password : client_secret
+   >> In Body select -- x-www-form-urlencoded
+	grant_type : your_grant_type
+	username : user_email
+   	password : user_password
+
+2. Request Type -- Refresh Token 
+   URL : http://localhost:8061/oauth2/token
+   >> In Authorization type -- Basic Auth
+   username : client_id
+   password : client_secret
+   >> In Body select -- x-www-form-urlencoded
+	grant_type : refresh_token
+	refresh_token : user_refresh_token
+
+3. Request Type -- Client Credentials 
+   URL : http://localhost:8061/oauth2/token
+   >> In Authorization type -- Basic Auth
+   username : client_id
+   password : client_secret
+   >> In Body select -- x-www-form-urlencoded
+	grant_type : client_credentials
+	
+
+Spring Boot 3.x and Java 21 :
+-----------------------------
+
+1. Spring Boot 3.x, it uses Spring Security 6 under the hood, fully aligned with Jakarta EE (no javax.*).
+2. OAuth2 / OIDC support is built-in for login with providers like Google, GitHub, or custom IdPs.
