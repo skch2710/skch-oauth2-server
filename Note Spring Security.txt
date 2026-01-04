@@ -19,6 +19,14 @@ API Call OAuth :
 	grant_type : refresh_token
 	refresh_token : user_refresh_token
 
+   >>>>**** For Authorization Code 
+	POST /oauth2/token
+	Content-Type: application/x-www-form-urlencoded
+
+	grant_type=refresh_token
+	client_id=auth_code_client
+	refresh_token=REFRESH_TOKEN_VALUE
+
 3. Request Type -- Client Credentials 
    URL : http://localhost:8061/oauth2/token
    >> In Authorization type -- Basic Auth
@@ -42,6 +50,120 @@ Spring Boot 3.x and Java 21 :
 
 1. Spring Boot 3.x, it uses Spring Security 6 under the hood, fully aligned with Jakarta EE (no javax.*).
 2. OAuth2 / OIDC support is built-in for login with providers like Google, GitHub, or custom IdPs.
+
+
+
+CustomGrantAuthenticationConverter
+   ↓
+CustomGrantAuthenticationToken
+   ↓
+CustomGrantAuthenticationProvider
+   ↓
+TokenGenerator (JWT + Refresh Token)
+   ↓
+OAuth2AuthorizationService (InMemory)
+
+
+
+Authorization Code Flow :
+--------------------------
+
+The authorization server is configured with Spring Authorization Server to enforce PKCE, authenticate users, issue authorization codes, and generate JWTs containing user authorities.
+
+http://localhost:8062/authenticate/sso-login
+
+React → /authenticate/login
+      → Auth Server /oauth2/authorize (state + PKCE)
+      → Auth Server /login
+      → /authenticate/callback?code=xxx&state=yyy
+      → /oauth2/token
+      → Cookies set
+      → Redirect → React
+
+
+React ──▶ RESOURCE/auth/login
+             ↓
+        Auth Server (/authorize)
+             ↓
+React ◀─ /auth/callback (code)
+             ↓
+        Auth Server (/token)
+             ↓
+        Cookies set
+             ↓
+React ──▶ /api/**
+
+
+React → Resource Server (/login)
+Resource Server → Auth Server (/authorize)
+Auth Server → Login page
+Auth Server → Resource Server (/callback)
+Resource Server → Auth Server (/token)
+Auth Server → JWT
+
+
+With Google login, the flow becomes:
+
+React → BFF (/authenticate/login)
+BFF → Authorization Server
+Authorization Server → Google OAuth
+Google → Authorization Server
+Authorization Server → BFF (code)
+BFF → Authorization Server (/token)
+BFF → sets cookies → React
+
+How Azure AD SSO fits later (high level):
+
+React → Resource Server (BFF)
+BFF → Authorization Server
+Authorization Server → Azure AD (SSO)
+Azure AD → Authorization Server
+Authorization Server → BFF (code)
+BFF → Authorization Server (/token)
+BFF → Cookies → React
+
+
+Auth success
+ ↓
+/authenticate/callback
+ ↓
+Set HttpOnly cookie: SSO_INIT=true
+ ↓
+Redirect → /sso-page
+ ↓
+React calls /profile
+ ↓
+Backend checks:
+  - valid auth cookie
+  - SSO_INIT cookie present
+ ↓
+✔ allow → clear SSO_INIT
+✖ deny → 401
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

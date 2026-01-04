@@ -8,7 +8,12 @@ server:
 
 app:
   aes-key: U2F0aGlzaEt1bWFyQ2gyNw==
-  #S@th!$h
+  grant-type: custom_pwd
+
+scheduler:
+  cleanup-expired-tokens: 0 0 1 ? * SAT,SUN
+#0 0 1 ? * SAT,SUN every weekend at 1 AM
+#0 0/1 * * * * every minute
 spring:
   application:
     name: skch-oauth2-server
