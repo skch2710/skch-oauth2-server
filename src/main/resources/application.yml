@@ -39,3 +39,10 @@ spring:
   threads:
     virtual:
       enabled: true
+
+security:
+  oauth2:
+    kid: c5ac9681-b6c6-49ad-bd0c-cf9a4ecc0ae1
+    jwt:
+      private-key: ${JWT_PRIVATE_KEY}
+      public-key: ${JWT_PUBLIC_KEY}
