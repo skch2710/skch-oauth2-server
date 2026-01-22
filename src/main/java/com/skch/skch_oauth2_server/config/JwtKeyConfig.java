@@ -52,28 +52,26 @@ public class JwtKeyConfig {
 		X509EncodedKeySpec spec = new X509EncodedKeySpec(decoded);
 		return (RSAPublicKey) KeyFactory.getInstance("RSA").generatePublic(spec);
 	}
-	
-//	public static void main(String[] args) throws Exception {
-//		printPemKeys();
-//		System.out.println(UUID.randomUUID().toString());
-//	}
-//
-//	private static void printPemKeys() throws Exception {
-//		KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
-//        generator.initialize(2048);
-//        KeyPair keyPair = generator.generateKeyPair();
-//        
-//		// ===== PRIVATE KEY (PKCS#8) =====
-//		String privateKeyPem = Base64.getMimeEncoder(64, new byte[] { '\n' })
-//				.encodeToString(keyPair.getPrivate().getEncoded());
-//		// ===== PUBLIC KEY (X.509) =====
-//		String publicKeyPem = Base64.getMimeEncoder(64, new byte[] { '\n' })
-//				.encodeToString(keyPair.getPublic().getEncoded());
-//		System.out.println("\n========== PRIVATE KEY ==========\n");
-//		System.out.println(privateKeyPem);
-//		System.out.println("\n========== PUBLIC KEY ==========\n");
-//		System.out.println(publicKeyPem);
-//	}
+	/*
+	public static void main(String[] args) throws Exception {
+		printPemKeys();
+		System.out.println("/n"+UUID.randomUUID().toString());
+	}
+
+	private static void printPemKeys() throws Exception {
+		KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
+        generator.initialize(2048);
+        KeyPair keyPair = generator.generateKeyPair();
+        
+		// ===== PRIVATE KEY (PKCS#8) =====
+		String privateKeyPem = Base64.getMimeEncoder(64, new byte[] { '\n' })
+				.encodeToString(keyPair.getPrivate().getEncoded());
+		// ===== PUBLIC KEY (X.509) =====
+		String publicKeyPem = Base64.getMimeEncoder(64, new byte[] { '\n' })
+				.encodeToString(keyPair.getPublic().getEncoded());
+		System.out.println("\n========== PRIVATE KEY ==========\n");
+		System.out.println(privateKeyPem);
+		System.out.println("\n========== PUBLIC KEY ==========\n");
 		System.out.println(publicKeyPem);
 	}*/
 }
