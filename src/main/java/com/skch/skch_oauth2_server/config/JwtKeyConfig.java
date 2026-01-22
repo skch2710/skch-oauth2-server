@@ -1,6 +1,8 @@
 package com.skch.skch_oauth2_server.config;
 
 import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
@@ -72,4 +74,6 @@ public class JwtKeyConfig {
 //		System.out.println("\n========== PUBLIC KEY ==========\n");
 //		System.out.println(publicKeyPem);
 //	}
+		System.out.println(publicKeyPem);
+	}*/
 }
