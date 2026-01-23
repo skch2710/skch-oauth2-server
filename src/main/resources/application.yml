@@ -7,35 +7,14 @@ server:
     max-swallow-size: 200000000
 
 app:
+  client-id: sathish_ch
+  client-secret: $2a$10$1oZeYehKZTCtx8titPu.oOHFMfd/X86SJltkEew4OIwFeY/8kGQVu
+  token-expire-in: 10
   aes-key: U2F0aGlzaEt1bWFyQ2gyNw==
-  grant-type: custom_pwd
 
-scheduler:
-  cleanup-expired-tokens: 0 0 1 ? * SAT,SUN
-#0 0 1 ? * SAT,SUN every weekend at 1 AM
-#0 0/1 * * * * every minute
 spring:
   application:
     name: skch-oauth2-server
-  datasource:
-    url: ${JDBC_CONNECTION_STRING}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-    driver-class-name: org.postgresql.Driver
-    hikari:
-      minimum-idle: 10
-      maximum-pool-size: 50
-      idle-timeout: 300000 # 5 minutes
-      max-lifetime: 1800000 # 30 minutes
-      connection-timeout: 30000 # 30 seconds
-      validation-timeout: 5000 # 5 seconds
-      leak-detection-threshold: 200000 # 200 seconds (approx 3.33 minutes)
-      pool-name: SpringBootHikariCP
-  jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: false
   threads:
     virtual:
       enabled: true
