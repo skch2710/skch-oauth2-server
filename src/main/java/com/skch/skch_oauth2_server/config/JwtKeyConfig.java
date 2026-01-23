@@ -13,6 +13,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -55,9 +56,10 @@ public class JwtKeyConfig {
 	/*
 	public static void main(String[] args) throws Exception {
 		printPemKeys();
-		System.out.println("/n"+UUID.randomUUID().toString());
+		System.out.println(UUID.randomUUID().toString());
+		System.out.println(new BCryptPasswordEncoder().encode("Sathish@123"));
 	}
-
+	
 	private static void printPemKeys() throws Exception {
 		KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
         generator.initialize(2048);
