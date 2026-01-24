@@ -10,6 +10,10 @@ app:
   client-id: sathish_ch
   client-secret: $2a$10$1oZeYehKZTCtx8titPu.oOHFMfd/X86SJltkEew4OIwFeY/8kGQVu
   token-expire-in: 10
+  header-key: X-ReqHeader
+  allow-headers:
+    - sathish_ch
+    - skch_2710
   aes-key: U2F0aGlzaEt1bWFyQ2gyNw==
 
 spring:
