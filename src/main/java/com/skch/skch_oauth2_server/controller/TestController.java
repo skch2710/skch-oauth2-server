@@ -32,7 +32,7 @@ public class TestController {
 //	@PreAuthorize("hasAnyAuthority(#p0.getTest())")
 //	@PreAuthorize("@jwtUtil.checkAccess(#p0.getResource())")
 	public ResponseEntity<?> getNav(@RequestBody JwtDTO jwtDTO){
-		return ResponseEntity.ok("Access :: "+jwtDTO);
+		return ResponseEntity.ok(jwtDTO);
 	}
 
 }

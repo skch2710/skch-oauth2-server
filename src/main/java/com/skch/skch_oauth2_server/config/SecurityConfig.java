@@ -44,6 +44,10 @@ public class SecurityConfig {
 	
 	private final AppProps appProps;
 	
+	private final CustomBearerTokenAuthenticationEntryPoint customBearerTokenAuthenticationEntryPoint;
+
+	private final CustomBearerTokenAccessDeniedHandler customBearerTokenAccessDeniedHandler;
+	
 	// Authorization Server filter chain
 	@Bean
 	@Order(1)
@@ -60,9 +64,12 @@ public class SecurityConfig {
 	public SecurityFilterChain apiSecurity(HttpSecurity http) throws Exception {
 		http.csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(auth -> auth
-						.requestMatchers("/actuator/**","/swagger-ui/**", "/v3/api-docs/**").permitAll().anyRequest().authenticated())
-				.oauth2ResourceServer(resourceServer -> resourceServer
-						.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));
+						.requestMatchers("/actuator/**","/swagger-ui/**", "/v3/api-docs/**").permitAll()
+						.anyRequest().authenticated())
+		.oauth2ResourceServer(resourceServer -> resourceServer
+				.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
+				.authenticationEntryPoint(customBearerTokenAuthenticationEntryPoint)
+				.accessDeniedHandler(customBearerTokenAccessDeniedHandler));
 		return http.build();
 	}
 
