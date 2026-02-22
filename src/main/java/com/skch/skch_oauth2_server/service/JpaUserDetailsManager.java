@@ -31,7 +31,7 @@ public class JpaUserDetailsManager implements UserDetailsManager {
 		Users user = userRepository.findByEmailIdIgnoreCase(username);
 		User ur = null;
 		try {
-			if (!user.getEmailId().equalsIgnoreCase(username)) {
+			if (user == null || !user.getEmailId().equalsIgnoreCase(username)) {
 				throw new UsernameNotFoundException("Access Denied");
 			}
 			Collection<GrantedAuthority> authoriies = new HashSet<>();
