@@ -1,6 +1,7 @@
 package com.skch.skch_oauth2_server.config;
 
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -164,6 +165,7 @@ public class SecurityConfig {
                 context.getClaims()
                         .claim("authorities", authorities)
                         .claim("user_name", principal.getName())
+                        .claim("sid", UUID.randomUUID().toString())
                         .claim("client_id", context.getRegisteredClient().getClientId());
             }
             if (OidcParameterNames.ID_TOKEN.equals(context.getTokenType().getValue())) {
