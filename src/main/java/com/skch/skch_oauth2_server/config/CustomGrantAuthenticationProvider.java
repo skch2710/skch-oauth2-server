@@ -8,7 +8,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -62,9 +62,9 @@ public class CustomGrantAuthenticationProvider implements AuthenticationProvider
 		username = customCodeGrantAuthentication.getUsername();
 		password = customCodeGrantAuthentication.getPassword();
 		authorizedScopes = customCodeGrantAuthentication.getScopes();
-		User user = null;
+		UserDetails user = null;
 		try {
-			user = (User) userDetailsService.loadUserByUsername(username);
+			user = (UserDetails) userDetailsService.loadUserByUsername(username);
 		} catch (UsernameNotFoundException e) {
 			throw new OAuth2AuthenticationException(OAuth2ErrorCodes.ACCESS_DENIED);
 		}
