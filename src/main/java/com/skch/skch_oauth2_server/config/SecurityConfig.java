@@ -158,16 +158,24 @@ public class SecurityConfig {
     OAuth2TokenCustomizer<JwtEncodingContext> tokenCustomizer() {
         return context -> {
             Authentication principal = context.getPrincipal();
-            if (OAuth2TokenType.ACCESS_TOKEN.equals(context.getTokenType())) {
-                Set<String> authorities = principal.getAuthorities().stream()
-                        .map(GrantedAuthority::getAuthority)
-                        .collect(Collectors.toSet());
-                context.getClaims()
-                        .claim("authorities", authorities)
-                        .claim("user_name", principal.getName())
-                        .claim("sid", UUID.randomUUID().toString())
-                        .claim("client_id", context.getRegisteredClient().getClientId());
-            }
+			if (OAuth2TokenType.ACCESS_TOKEN.equals(context.getTokenType())) {
+				String uidPrefix = "USER_ID:";
+				Set<String> authorities = principal.getAuthorities()
+						.stream().map(GrantedAuthority::getAuthority)
+						.filter(authority -> {
+							if (authority.startsWith(uidPrefix)) {
+								context.getClaims().claim("uid", authority.substring(uidPrefix.length()));
+								return false;
+							}
+							return true;
+						}).collect(Collectors.toSet());
+
+				context.getClaims().claim("authorities", authorities)
+				.claim("user_name", principal.getName())
+				.claim("sid", UUID.randomUUID().toString());
+			}
+            
+
             if (OidcParameterNames.ID_TOKEN.equals(context.getTokenType().getValue())) {
                 Set<String> authorities = principal.getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority)

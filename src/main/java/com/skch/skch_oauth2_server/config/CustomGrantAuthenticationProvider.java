@@ -101,7 +101,7 @@ public class CustomGrantAuthenticationProvider implements AuthenticationProvider
 				generatedAccessToken.getExpiresAt(), null);
 
 		OAuth2Authorization.Builder authorizationBuilder = OAuth2Authorization.withRegisteredClient(registeredClient)
-				.principalName(clientPrincipal.getName())
+				.principalName(user.getUsername())
 				.authorizationGrantType(customCodeGrantAuthentication.getGrantType());
 		if (generatedAccessToken instanceof ClaimAccessor) {
 			authorizationBuilder.token(accessToken,
