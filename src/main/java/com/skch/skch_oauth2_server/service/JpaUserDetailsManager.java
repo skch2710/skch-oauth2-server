@@ -37,9 +37,9 @@ public class JpaUserDetailsManager implements UserDetailsManager {
 			Collection<GrantedAuthority> authoriies = new HashSet<>();
 			authoriies.add(new SimpleGrantedAuthority(user.getUserRole().getRoles().getRoleName()));
 
-			authoriies.add(new SimpleGrantedAuthority("USER UUID : " + user.getUserUuid()));
+//			authoriies.add(new SimpleGrantedAuthority("USER UUID : " + user.getUserUuid()));
 
-			authoriies.add(new SimpleGrantedAuthority("USER_ID : " + AESUtils.encrypt(user.getUserId().toString())));
+			authoriies.add(new SimpleGrantedAuthority("USER_ID:" + AESUtils.encrypt(user.getUserId().toString())));
 
 			for (UserPrivilege privileges : user.getUserPrivilege()) {
 				String resourceName = privileges.getResource().getResourceName();
@@ -59,6 +59,7 @@ public class JpaUserDetailsManager implements UserDetailsManager {
 			ur = new User(user.getEmailId(), user.getPasswordSalt(), authoriies);
 		} catch (Exception e) {
 			log.error("Error in loadUserByUsername :: ", e);
+			 throw new UsernameNotFoundException("Access Denied");
 		}
 		return ur;
 	}
