@@ -43,9 +43,6 @@ import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import com.skch.skch_oauth2_server.model.Users;
-import com.skch.skch_oauth2_server.service.CustomUserDetails;
-import com.skch.skch_oauth2_server.util.AESUtils;
 
 @Configuration
 @EnableWebSecurity
@@ -168,17 +165,8 @@ public class SecurityConfig {
                 context.getClaims()
                         .claim("authorities", authorities)
                         .claim("user_name", principal.getName())
-                        .claim("sid", UUID.randomUUID().toString());
-                // Try to extract the JPA Users entity if present on the principal
-                if (principal.getPrincipal() instanceof CustomUserDetails) {
-                    Users u = ((CustomUserDetails) principal.getPrincipal()).getUsers();
-                    if (u != null && u.getUserRole() != null && u.getUserRole().getRoles() != null) {
-                        context.getClaims().claim("user_role", u.getUserRole().getRoles().getRoleName());
-                    }
-                    if(u != null) {
-						context.getClaims().claim("uid", AESUtils.encrypt(u.getUserId().toString()));
-					}
-                }
+                        .claim("sid", UUID.randomUUID().toString())
+                        .claim("client_id", context.getRegisteredClient().getClientId());
             }
             if (OidcParameterNames.ID_TOKEN.equals(context.getTokenType().getValue())) {
                 Set<String> authorities = principal.getAuthorities().stream()
