@@ -3,11 +3,14 @@ package com.skch.skch_oauth2_server.config;
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -79,8 +82,14 @@ public class CustomGrantAuthenticationProvider implements AuthenticationProvider
 				throw new OAuth2AuthenticationException(OAuth2ErrorCodes.INVALID_SCOPE);
 			}
 		});
+		String sid = UUID.randomUUID().toString();
+
+		Set<GrantedAuthority> updatedAuthorities = new HashSet<>(user.getAuthorities());
+
+		updatedAuthorities.add(new SimpleGrantedAuthority("SID:" + sid));
+
 		Authentication usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(user, null,
-				user.getAuthorities());
+				updatedAuthorities);
 
 		DefaultOAuth2TokenContext.Builder tokenContextBuilder = DefaultOAuth2TokenContext.builder()
 				.registeredClient(registeredClient).principal(usernamePasswordAuthenticationToken)
@@ -99,7 +108,7 @@ public class CustomGrantAuthenticationProvider implements AuthenticationProvider
 		OAuth2AccessToken accessToken = new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER,
 				generatedAccessToken.getTokenValue(), generatedAccessToken.getIssuedAt(),
 				generatedAccessToken.getExpiresAt(), null);
-
+		
 		OAuth2Authorization.Builder authorizationBuilder = OAuth2Authorization.withRegisteredClient(registeredClient)
 				.principalName(user.getUsername())
 				.authorizationGrantType(customCodeGrantAuthentication.getGrantType());

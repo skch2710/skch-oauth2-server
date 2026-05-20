@@ -1,7 +1,6 @@
 package com.skch.skch_oauth2_server.config;
 
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -167,12 +166,15 @@ public class SecurityConfig {
 								context.getClaims().claim("uid", authority.substring(uidPrefix.length()));
 								return false;
 							}
+							if (authority.startsWith("SID:")) {
+								context.getClaims().claim("sid", authority.substring("SID:".length()));
+								return false;
+							}
 							return true;
 						}).collect(Collectors.toSet());
 
 				context.getClaims().claim("authorities", authorities)
-				.claim("user_name", principal.getName())
-				.claim("sid", UUID.randomUUID().toString());
+				.claim("user_name", principal.getName());
 			}
             
 
