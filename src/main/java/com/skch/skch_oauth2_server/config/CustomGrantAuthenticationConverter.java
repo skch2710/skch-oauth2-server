@@ -4,17 +4,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
-import org.springframework.lang.Nullable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
-import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.web.authentication.AuthenticationConverter;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -27,19 +23,21 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CustomGrantAuthenticationConverter implements AuthenticationConverter {
-	
+
+	private static final String USERNAME = "username";
+	private static final String PASSWORD = "password";
+
 	private String GRANT_TYPE;
 
-	@Nullable
 	@Override
 	public Authentication convert(HttpServletRequest request) {
 
 		String grantType = request.getParameter(OAuth2ParameterNames.GRANT_TYPE);
-		
+
 		if (!GRANT_TYPE.equals(grantType)) {
 			return null;
 		}
-		
+
 		Authentication clientPrincipal = SecurityContextHolder.getContext().getAuthentication();
 
 		MultiValueMap<String, String> parameters = getParameters(request);
@@ -53,14 +51,14 @@ public class CustomGrantAuthenticationConverter implements AuthenticationConvert
 		}
 
 		// username (REQUIRED)
-		String username = parameters.getFirst(OAuth2ParameterNames.USERNAME);
-		if (!StringUtils.hasText(username) || parameters.get(OAuth2ParameterNames.USERNAME).size() != 1) {
+		String username = parameters.getFirst(USERNAME);
+		if (!StringUtils.hasText(username) || parameters.get(USERNAME).size() != 1) {
 			throw new OAuth2AuthenticationException(OAuth2ErrorCodes.INVALID_REQUEST);
 		}
 
 		// password (REQUIRED)
-		String password = parameters.getFirst(OAuth2ParameterNames.PASSWORD);
-		if (!StringUtils.hasText(password) || parameters.get(OAuth2ParameterNames.PASSWORD).size() != 1) {
+		String password = parameters.getFirst(PASSWORD);
+		if (!StringUtils.hasText(password) || parameters.get(PASSWORD).size() != 1) {
 			throw new OAuth2AuthenticationException(OAuth2ErrorCodes.INVALID_REQUEST);
 		}
 
@@ -70,18 +68,18 @@ public class CustomGrantAuthenticationConverter implements AuthenticationConvert
 		}
 
 		parameters.forEach((key, value) -> {
-			if (!key.equals(OAuth2ParameterNames.GRANT_TYPE) && !key.equals(OAuth2ParameterNames.SCOPE)) {
+			if (!OAuth2ParameterNames.GRANT_TYPE.equals(key) && !OAuth2ParameterNames.SCOPE.equals(key)) {
 				additionalParameters.put(key, value.get(0));
 			}
 		});
 
-		return new CustomGrantAuthenticationToken(grantType, clientPrincipal, requestedScopes,
-				additionalParameters);
+		return new CustomGrantAuthenticationToken(grantType, clientPrincipal, requestedScopes, additionalParameters);
 	}
 
 	private static MultiValueMap<String, String> getParameters(HttpServletRequest request) {
 		Map<String, String[]> parameterMap = request.getParameterMap();
 		MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>(parameterMap.size());
+
 		parameterMap.forEach((key, values) -> {
 			if (values.length > 0) {
 				for (String value : values) {
@@ -89,6 +87,7 @@ public class CustomGrantAuthenticationConverter implements AuthenticationConvert
 				}
 			}
 		});
+
 		return parameters;
 	}
 }

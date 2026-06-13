@@ -12,6 +12,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
+import org.springframework.security.config.annotation.web.configurers.oauth2.server.authorization.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -26,8 +28,6 @@ import org.springframework.security.oauth2.server.authorization.OAuth2Authorizat
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 import org.springframework.security.oauth2.server.authorization.client.JdbcRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
-import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
-import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.oauth2.server.authorization.token.DelegatingOAuth2TokenGenerator;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
@@ -59,8 +59,8 @@ public class SecurityConfig {
 			OAuth2AuthorizationService authorizationService, 
 			OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator,
 			UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) throws Exception {
-		OAuth2AuthorizationServerConfigurer authorizationServerConfigurer = 
-				OAuth2AuthorizationServerConfigurer.authorizationServer();
+		OAuth2AuthorizationServerConfigurer authorizationServerConfigurer =
+		        new OAuth2AuthorizationServerConfigurer();
 		http.securityMatcher(authorizationServerConfigurer.getEndpointsMatcher())
 				.authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
 				.csrf(csrf -> csrf.ignoringRequestMatchers(

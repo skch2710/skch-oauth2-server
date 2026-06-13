@@ -1,0 +1,48 @@
+server:
+  port: 8061
+  forward-headers-strategy: framework
+  max-http-request-header-size: 200000000
+  tomcat:
+    max-http-form-post-size: 200000000
+    max-swallow-size: 200000000
+
+app:
+  aes-key: U2F0aGlzaEt1bWFyQ2gyNw==
+  grant-type: custom_pwd
+
+scheduler:
+  cleanup-expired-tokens: 0 0 1 ? * SAT,SUN
+#0 0 1 ? * SAT,SUN every weekend at 1 AM
+#0 0/1 * * * * every minute
+spring:
+  application:
+    name: skch-oauth2-server
+  datasource:
+    url: ${JDBC_CONNECTION_STRING}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      minimum-idle: 10
+      maximum-pool-size: 50
+      idle-timeout: 300000 # 5 minutes
+      max-lifetime: 1800000 # 30 minutes
+      connection-timeout: 30000 # 30 seconds
+      validation-timeout: 5000 # 5 seconds
+      leak-detection-threshold: 200000 # 200 seconds (approx 3.33 minutes)
+      pool-name: SpringBootHikariCP
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+  threads:
+    virtual:
+      enabled: true
+
+security:
+  oauth2:
+    kid: c5ac9681-b6c6-49ad-bd0c-cf9a4ecc0ae1
+    jwt:
+      private-key: ${JWT_PRIVATE_KEY}
+      public-key: ${JWT_PUBLIC_KEY}
