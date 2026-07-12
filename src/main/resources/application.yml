@@ -1,10 +1,10 @@
 server:
   port: 8061
   forward-headers-strategy: framework
-  max-http-request-header-size: 200000000
+  max-http-request-header-size: 128KB
   tomcat:
-    max-http-form-post-size: 200000000
-    max-swallow-size: 200000000
+    max-http-form-post-size: 128KB
+    max-swallow-size: 128KB
 
 app:
   aes-key: U2F0aGlzaEt1bWFyQ2gyNw==
