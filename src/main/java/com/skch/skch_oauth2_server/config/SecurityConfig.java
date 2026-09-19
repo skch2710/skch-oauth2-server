@@ -91,6 +91,7 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/login").permitAll()
+				.requestMatchers("/.well-known/**").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(Customizer.withDefaults());
@@ -158,6 +159,7 @@ public class SecurityConfig {
         return context -> {
             Authentication principal = context.getPrincipal();
 			if (OAuth2TokenType.ACCESS_TOKEN.equals(context.getTokenType())) {
+				System.out.println(">>>>> Inside Access Token Customization");
 				String uidPrefix = "USER_ID:";
 				Set<String> authorities = principal.getAuthorities()
 						.stream().map(GrantedAuthority::getAuthority)
@@ -179,6 +181,7 @@ public class SecurityConfig {
             
 
             if (OidcParameterNames.ID_TOKEN.equals(context.getTokenType().getValue())) {
+            	System.out.println(">>>>> Inside ID Token Customization");
                 Set<String> authorities = principal.getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority)
                         .collect(Collectors.toSet());

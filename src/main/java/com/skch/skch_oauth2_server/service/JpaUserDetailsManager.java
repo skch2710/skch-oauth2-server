@@ -2,6 +2,7 @@ package com.skch.skch_oauth2_server.service;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -40,6 +41,8 @@ public class JpaUserDetailsManager implements UserDetailsManager {
 //			authoriies.add(new SimpleGrantedAuthority("USER UUID : " + user.getUserUuid()));
 
 			authoriies.add(new SimpleGrantedAuthority("USER_ID:" + AESUtils.encrypt(user.getUserId().toString())));
+			
+			authoriies.add(new SimpleGrantedAuthority("SID:" + UUID.randomUUID().toString()));
 
 			for (UserPrivilege privileges : user.getUserPrivilege()) {
 				String resourceName = privileges.getResource().getResourceName();

@@ -82,14 +82,13 @@ public class CustomGrantAuthenticationProvider implements AuthenticationProvider
 				throw new OAuth2AuthenticationException(OAuth2ErrorCodes.INVALID_SCOPE);
 			}
 		});
-		String sid = UUID.randomUUID().toString();
-
-		Set<GrantedAuthority> updatedAuthorities = new HashSet<>(user.getAuthorities());
-
-		updatedAuthorities.add(new SimpleGrantedAuthority("SID:" + sid));
+		
+//		String sid = UUID.randomUUID().toString();
+//		Set<GrantedAuthority> updatedAuthorities = new HashSet<>(user.getAuthorities());
+//		updatedAuthorities.add(new SimpleGrantedAuthority("SID:" + sid));
 
 		Authentication usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(user, null,
-				updatedAuthorities);
+				user.getAuthorities());
 
 		DefaultOAuth2TokenContext.Builder tokenContextBuilder = DefaultOAuth2TokenContext.builder()
 				.registeredClient(registeredClient).principal(usernamePasswordAuthenticationToken)
