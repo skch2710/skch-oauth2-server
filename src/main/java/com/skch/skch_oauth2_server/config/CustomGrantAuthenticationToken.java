@@ -5,11 +5,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.springframework.lang.Nullable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
-import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AuthorizationGrantAuthenticationToken;
+
+import com.skch.skch_oauth2_server.common.Constant;
 
 public class CustomGrantAuthenticationToken extends OAuth2AuthorizationGrantAuthenticationToken {
 
@@ -20,11 +20,11 @@ public class CustomGrantAuthenticationToken extends OAuth2AuthorizationGrantAuth
 
 	protected CustomGrantAuthenticationToken(
 			String granttype,
-			Authentication clientPrincipal,@Nullable Set<String> scopes, 
+			Authentication clientPrincipal,Set<String> scopes, 
 			Map<String, Object> additionalParameters) {
 		super(new AuthorizationGrantType(granttype), clientPrincipal, additionalParameters);
-		this.username = (String) additionalParameters.get(OAuth2ParameterNames.USERNAME);
-		this.password = (String) additionalParameters.get(OAuth2ParameterNames.PASSWORD);
+		this.username = (String) additionalParameters.get(Constant.USERNAME);
+		this.password = (String) additionalParameters.get(Constant.PASSWORD);
 		this.scopes = Collections.unmodifiableSet(
 				scopes != null ? new HashSet<>(scopes) : Collections.emptySet());
 	}
